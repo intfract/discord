@@ -1,3 +1,4 @@
 replit.nix
 .replit
 .config/
+node_modules/
