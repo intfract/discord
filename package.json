@@ -1,0 +1,21 @@
+{
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node . && node deploy.js",
+    "prod": "node ."
+  },
+  "keywords": [],
+  "author": "intfract",
+  "license": "MIT",
+  "dependencies": {
+    "@discordjs/rest": "^1.1.0",
+    "@types/node": "^18.0.6",
+    "chalk": "^5.0.1",
+    "defract": "^2.0.0",
+    "discord-api-types": "^0.37.10",
+    "discord.js": "^14.3.0"
+  }
+}
