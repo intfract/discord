@@ -45,7 +45,7 @@ module.exports = {
       .setTitle(`Trivia`)
       .setDescription(`**${trivia.question}**`)
       .setColor('#2f3136')
-      .setFooter({ text: `You have ${seconds} seconds to answer!` })
+      .setFooter({ text: `You have ${seconds} ${(seconds === 1) ? 'second' : 'seconds'} to answer!` })
       .addFields(
         { name: 'Category', value: '`' + trivia.category + '`', inline: true },
         { name: 'Difficulty', value: '`' + trivia.difficulty + '`', inline: true },
@@ -58,6 +58,8 @@ module.exports = {
         new ButtonBuilder().setLabel(choice).setStyle('Primary').setCustomId(`trivia:${i}`)
       )
     }
+    
+    let answered = false
 
     const row = new ActionRowBuilder()
       .addComponents(components)
@@ -70,6 +72,8 @@ module.exports = {
 
         await i.deferUpdate()
         if (i.user.id !== interaction.user.id) return i.followUp({ content: `These buttons aren't for you!`, ephemeral: true })
+
+        answered = true
 
         for (const item of row.components) {
           if (item.data.custom_id === i.customId) {
@@ -88,9 +92,11 @@ module.exports = {
         if (reason === 'time') {
           console.log('timeout')
           for (const item of row.components) {
-            item.setStyle('Danger')
-            if (item.data.custom_id.split(':')[1] == trivia.answer) {
-              item.setStyle('Success')
+            if (!answered) {
+              item.setStyle('Danger')
+              if (item.data.custom_id.split(':')[1] == trivia.answer) {
+                item.setStyle('Success')
+              }
             }
             item.setDisabled(true)
           }
