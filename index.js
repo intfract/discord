@@ -1,4 +1,5 @@
 const { Client, GatewayIntentBits, Partials, Collection, ActivityType } = require('discord.js')
+require('dotenv').config()
 
 require('http').createServer((req, res) => res.end(process.version)).listen()
 const events = require('./events')
