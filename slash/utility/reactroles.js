@@ -78,30 +78,12 @@ module.exports = {
       emojis.push(emoji.value)
     }
 
-    const file = fs.readFileSync('reactions.discord', 'utf-8')
-    fs.writeFileSync('reactions.discord', '')
-
     const message = await interaction.reply({ content: content, fetchReply: true })
     for (const emoji of emojis) {
       message.react(emoji).catch(e => console.log(e))
     }
 
-    function filter(reaction, user) {
-      return emojis.includes(`<:${reaction.emoji.name}:${reaction.emoji.id}>`)
-    }
-
-    const collector = message.createReactionCollector({ filter, time: 20000 })
-    collector.on('collect', (reaction, user) => {
-      // needs security
-      // console.log(reaction)
-      // const emoji = `<:${reaction.emoji.name}:${reaction.emoji.id}>`
-      // const role = roles[emojis.indexOf(emoji)]
-      // const member = guild.members.cache.get(user.id)
-      // console.log(member)
-      // member.roles.add(role)
-    })
-    collector.on('end', (collected) => {
-      console.log(collected.size)
-    })
+    const file = fs.readFileSync('reactions.discord', 'utf-8')
+    fs.writeFileSync('reactions.discord', file + `\n${message.id}=${roles}|${emojis}`)
   }
 }

@@ -17,7 +17,7 @@ module.exports = {
         const role = roles[emojis.indexOf(emoji)]
         const guild = client.guilds.cache.get(reaction.message.guildId)
         const member = guild.members.cache.get(user.id)
-        member.roles.add(role.match(/[0-9]+/g)).catch(e => console.log(e))
+        member.roles.remove(role.match(/[0-9]+/g)).catch(e => console.log(e))
         return
       }
     }
