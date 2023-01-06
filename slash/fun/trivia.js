@@ -9,16 +9,40 @@ module.exports = {
     let seconds = 20
     const data = [
       {
-        question: 'Who is the richest person in the world?',
+        question: 'When was minecraft fully released?',
         choices: [
-          'Jeff Bezos',
-          'Elon Musk',
-          'Steve Jobs',
-          'Larry Page',
+          '2009',
+          '2010',
+          '2011',
+          '2012',
         ],
-        answer: 1,
-        category: 'People',
+        answer: 2,
+        category: 'Games',
         difficulty: 'Medium',
+      },
+      {
+        question: 'Who took control of minecraft after Notch?',
+        choices: [
+          'Jens Bergensten',
+          'Nathan Adams',
+          'Markus Persson',
+          'Lydia Winters',
+        ],
+        answer: 0,
+        category: 'Games',
+        difficulty: 'Medium',
+      },
+      {
+        question: 'Which mob teleports in minecraft?',
+        choices: [
+          'Phantoms',
+          'Endermites',
+          'Ghasts',
+          'Shulkers',
+        ],
+        answer: 3,
+        category: 'Games',
+        difficulty: 'Easy',
       },
       {
         question: 'What is an API?',
@@ -29,8 +53,44 @@ module.exports = {
           'Application Programming Interface',
         ],
         answer: 3,
-        category: 'Computer Science',
+        category: 'Computers',
         difficulty: 'Medium',
+      },
+      {
+        question: 'Who was the first person in space?',
+        choices: [
+          'Edwin Aldrin',
+          'Yuri Gagarin',
+          'Neil Armstrong',
+          'Elon Musk',
+        ],
+        answer: 1,
+        category: 'History',
+        difficulty: 'Medium',
+      },
+      {
+        question: 'What is Voldemort\'s real name in Harry Potter?',
+        choices: [
+          'Severus Snape',
+          'Viktor Krum',
+          'Tom Riddle',
+          'Igor Karakoff',
+        ],
+        answer: 2,
+        category: 'Books',
+        difficulty: 'Easy',
+      },
+      {
+        question: 'Who betrayed James and Lily Potter?',
+        choices: [
+          'Sirius Black',
+          'Voldemort',
+          'Peter Pettigrew',
+          'Lucius Malfoy',
+        ],
+        answer: 2,
+        category: 'Books',
+        difficulty: 'Hard',
       },
     ]
 
