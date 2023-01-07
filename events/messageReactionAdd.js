@@ -13,8 +13,7 @@ module.exports = {
       if (id === reaction.message.id) {
         const roles = x[1].split('|')[0].split(',')
         const emojis = x[1].split('|')[1].split(',')
-        const emoji = `<:${reaction.emoji.name}:${reaction.emoji.id}>`
-        const role = roles[emojis.indexOf(emoji)]
+        const role = roles[emojis.indexOf((reaction.emoji.id) ? `<:${reaction.emoji.name}:${reaction.emoji.id}>` : reaction.emoji.name)]
         const guild = client.guilds.cache.get(reaction.message.guildId)
         const member = guild.members.cache.get(user.id)
         member.roles.add(role.match(/[0-9]+/g)).catch(e => console.log(e))

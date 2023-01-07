@@ -71,11 +71,17 @@ module.exports = {
     const roles = []
     const emojis = []
 
-    for (let i = 1; i < interaction.options._hoistedOptions.length; i += 2) {
-      const role = interaction.options._hoistedOptions[i]
-      roles.push(role.role)
-      const emoji = interaction.options._hoistedOptions[i + 1]
-      emojis.push(emoji.value)
+    const options = interaction.options._hoistedOptions
+    
+    for (let i = 1; i < options.length; i += 2) {
+      if (options[i] && options[i + 1] && options[i].name.startsWith('role') && options[i + 1].name.startsWith('emoji')) {
+        const role = options[i]
+        roles.push(role.role)
+        const emoji = options[i + 1]
+        emojis.push(emoji.value)
+      } else {
+        i--
+      }
     }
 
     const message = await interaction.reply({ content: content, fetchReply: true })
