@@ -5,7 +5,7 @@ module.exports = {
   name: counterpart.name,
   description: counterpart.description,
   cooldown: counterpart.cooldown,
-  args: counterpart.options,
+  options: counterpart.options,
   aliases: [],
   run: (message, args, client, ...extras) => {
     console.log('LINEAR')

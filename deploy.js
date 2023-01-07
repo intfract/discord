@@ -24,9 +24,8 @@ module.exports = (client) => {
       
       if (slashCommand.name) {
         client.slashCommands.set(slashCommand.name, slashCommand)
-        
       } else {
-        
+        console.log(slashCommand)
       }
     }
   });

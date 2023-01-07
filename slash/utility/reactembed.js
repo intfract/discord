@@ -1,4 +1,4 @@
-const { ApplicationCommandType, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ApplicationCommandOptionType, messageLink } = require('discord.js');
+const { ApplicationCommandType, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ApplicationCommandOptionType, messageLink, PermissionFlagsBits } = require('discord.js');
 const fs = require('fs')
 
 module.exports = {
@@ -6,6 +6,7 @@ module.exports = {
   description: "Send a message with reaction roles and an embed!",
   type: ApplicationCommandType.ChatInput,
   cooldown: 3000,
+  default_member_permissions: PermissionFlagsBits.AddReactions,
   options: [
     {
       name: 'message',

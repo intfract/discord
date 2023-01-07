@@ -5,7 +5,7 @@ const client = require('..')
 module.exports = {
   respond(message) {
     if (message.content.startsWith(client.prefix)) {
-      const args = message.content.substring(client.prefix.length).split(',')
+      const args = message.content.substring(client.prefix.length).split(' ')
       const command = args.shift().trim()
       if (!_.last(args)) {
         args.pop()

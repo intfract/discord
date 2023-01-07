@@ -1,5 +1,4 @@
 const { ApplicationCommandType, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ApplicationCommandOptionType } = require('discord.js');
-const { args } = require('../../linear/avatar');
 
 module.exports = {
   name: 'avatar',
@@ -14,10 +13,17 @@ module.exports = {
       required: false,
     }
   ],
-  run: async (client, interaction, linear) => {
+  run: async (client, interaction, ...args) => {
+    const guild = client.guilds.cache.get(interaction.guild.id)
     let user
-    if (linear) {
-      user = linear.user
+    if (args) {
+      const member = guild.members.cache.get(args[0].substring(2, args[0].length - 1))
+      if (member) {
+        user = member.user
+      } else {
+        interaction.reply({ content: 'That user does not exist!' })
+        return
+      }
     } else {
       user = interaction.options.get('user')?.user || interaction.user
     }
@@ -33,8 +39,8 @@ module.exports = {
     formats.forEach(format => {
       let imageOptions = { extension: format, forceStatic: format == 'gif' ? false : true }
 
-      if (user.avatar == null && format !== 'png') return;
-      if (!user.avatar.startsWith('a_') && format === 'gif') return;
+      if (user.avatar == null && format !== 'png') return
+      if (!user.avatar.startsWith('a_') && format === 'gif') return
       components.push(
         new ButtonBuilder()
           .setLabel(format.toUpperCase())
@@ -46,6 +52,6 @@ module.exports = {
     const row = new ActionRowBuilder()
       .addComponents(components)
 
-    return interaction.reply({ embeds: [embed], components: [row] })
+    return interaction.reply({ embeds: [embed], components: [row] }).catch(e => console.log(e))
   }
 }

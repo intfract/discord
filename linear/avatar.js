@@ -5,9 +5,13 @@ module.exports = {
   name: counterpart.name,
   description: counterpart.description,
   cooldown: counterpart.cooldown,
-  args: counterpart.options,
+  options: counterpart.options,
   aliases: ['ava'],
   run: (message, args, client, ...extras) => {
-    counterpart.run(client, message, args[0])
+    if (args[0] && /<@[0-9]+>/g.test(args[0])) {
+      counterpart.run(client, message, ...args)
+    } else {
+      message.reply(`An invalid argument was provided out of ${counterpart.options.length} argument${(counterpart.options.length === 1) ? '' : 's'}`)
+    }
   }
 }
