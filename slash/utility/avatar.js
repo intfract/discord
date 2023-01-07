@@ -1,4 +1,5 @@
 const { ApplicationCommandType, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ApplicationCommandOptionType } = require('discord.js');
+const { args } = require('../../linear/avatar');
 
 module.exports = {
   name: 'avatar',
@@ -13,8 +14,13 @@ module.exports = {
       required: false,
     }
   ],
-  run: async (client, interaction) => {
-    const user = interaction.options.get('user')?.user || interaction.user;
+  run: async (client, interaction, linear) => {
+    let user
+    if (linear) {
+      user = linear.user
+    } else {
+      user = interaction.options.get('user')?.user || interaction.user
+    }
 
     const embed = new EmbedBuilder()
       .setTitle(`${user.tag}'s Avatar`)

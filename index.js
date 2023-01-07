@@ -1,5 +1,6 @@
 const { Client, GatewayIntentBits, Partials, Collection, ActivityType } = require('discord.js')
 require('dotenv').config()
+const fs = require('fs')
 
 require('http').createServer((req, res) => res.end(process.version)).listen()
 const events = require('./events')
@@ -18,10 +19,15 @@ const client = new Client({
 });
 
 client.commands = new Collection()
-client.aliases = new Collection()
 client.slashCommands = new Collection()
 
-client.prefix = '&';
+const commands = fs.readdirSync('./linear', file => file.endsWith('.js'))
+for (const command of commands) {
+  const file = require(`./linear/${command}`)
+  client.commands.set(file.name, file)
+}
+
+client.prefix = 'dev ';
 
 module.exports = client;
 

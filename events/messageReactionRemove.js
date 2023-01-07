@@ -1,4 +1,4 @@
-const client = require('../index')
+const client = require('..')
 const fs = require('fs');
 
 module.exports = {
