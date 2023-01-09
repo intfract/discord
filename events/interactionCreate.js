@@ -3,6 +3,10 @@ const fs = require('fs')
 const client = require('..')
 const fract = require('../fract')
 
+function type(data) {
+  return Object.prototype.toString.call(data).slice(8, -1)
+}
+
 module.exports = {
   async respond(interaction) {
     if (interaction.isChatInputCommand()) {
@@ -31,7 +35,11 @@ module.exports = {
       let code = fract(data.split(/\/\/[ ]?\$[ ]*/g)[1], interaction)
       try {
         const exe = (new Function(`${code}; ${input}`))
-        output = exe().toString() // improve by showing types etc
+        result = exe()
+        console.log(result)
+        if (type(result) === 'Array') {
+          output = `Array(${result.length}): [${(result) ? result.join(', ') : 'Empty'}]` // add quotes around string returns
+        }
       } catch (e) {
         output = e.stack.split('\n').splice(0, 3).join('\n')
       }
