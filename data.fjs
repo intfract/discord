@@ -1,0 +1,5 @@
+// $
+const server = {
+  name: '$.guild.name',
+  id: '$.guild.id',
+};

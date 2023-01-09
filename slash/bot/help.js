@@ -33,13 +33,26 @@ module.exports = {
     const components = []
     const groups = fs.readdirSync('./slash')
     console.log(groups)
-    for (const group of groups) {
+    if (args[0]) {
       components.push(
         new ButtonBuilder()
-          .setLabel(`${group.charAt(0).toUpperCase() + group.substr(1).toLowerCase()}`)
+          .setLabel('Linear')
           .setStyle('Primary')
-          .setCustomId(`help:${group}`)
+          .setCustomId('help:linear'),
+        new ButtonBuilder()
+          .setLabel('Scripting')
+          .setStyle('Success')
+          .setCustomId('help:scripting')
       )
+    } else {
+      for (const group of groups) {
+        components.push(
+          new ButtonBuilder()
+            .setLabel(`${group.charAt(0).toUpperCase() + group.substr(1).toLowerCase()}`)
+            .setStyle('Primary')
+            .setCustomId(`help:${group}`)
+        )
+      }
     }
 
     const row = new ActionRowBuilder()
@@ -67,18 +80,22 @@ module.exports = {
           .setTimestamp()
 
         if (args[0]) {
-          const files = fs.readdirSync(`./linear`).filter(file => file.endsWith('.js'))
-          for (const file of files) {
-            const command = require(`../../linear/${file}`)
-            let cmd = command.name
-            if (command.options) {
-              for (const option of command.options) {
-                cmd += ` ${option.name}:${types[option.type]}`
+          if (title === 'scripting') {
+            section.setDescription(`This bot mainly uses JavaScript syntax.`)
+          } else {
+            const files = fs.readdirSync(`./linear`).filter(file => file.endsWith('.js'))
+            for (const file of files) {
+              const command = require(`../../linear/${file}`)
+              let cmd = command.name
+              if (command.options) {
+                for (const option of command.options) {
+                  cmd += ` ${option.name}:${types[option.type]}`
+                }
               }
+              section.addFields(
+                { name: cmd, value: command.description }
+              )
             }
-            section.addFields(
-              { name: cmd, value: command.description }
-            )
           }
           return message.edit({ embeds: [section] }) 
         } else {

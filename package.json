@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "node . && node deploy.js",
-    "prod": "node ."
+    "prod": "node .",
+    "fjs": "node fract.js"
   },
   "keywords": [],
   "author": "intfract",
