@@ -3,9 +3,9 @@ const { ActivityType } = require('discord.js')
 module.exports = {
   respond(client) {
     const activities = [
-  		{ name: `${client.guilds.cache.size} Servers`, type: ActivityType.Listening },
+  		{ name: `${client.guilds.cache.size} Server${(client.guilds.cache.size === 1) ? '' : 's'}`, type: ActivityType.Listening },
   		{ name: `/help`, type: ActivityType.Playing },
-  		{ name: `${client.users.cache.size} Users`, type: ActivityType.Watching },
+  		{ name: `${client.users.cache.size} User${(client.users.cache.size === 1) ? '' : 's'}`, type: ActivityType.Watching },
   		{ name: `Discord.js`, type: ActivityType.Competing }
   	];
   	const status = [

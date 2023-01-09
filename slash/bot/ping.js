@@ -1,4 +1,4 @@
-const { ApplicationCommandType, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ApplicationCommandOptionType } = require('discord.js');
+const { ApplicationCommandType, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ApplicationCommandOptionType } = require('discord.js')
 
 module.exports = {
 	name: 'ping',
@@ -8,4 +8,4 @@ module.exports = {
 	run: async (client, interaction) => {
 		interaction.reply({ content: `🏓 Pong! Latency: **${Math.round(client.ws.ping)} ms**` })
 	}
-};
+}

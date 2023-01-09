@@ -8,6 +8,6 @@ module.exports = {
   options: counterpart.options,
   aliases: [],
   run: (message, args, client, ...extras) => {
-    console.log('LINEAR')
+    counterpart.run(client, message, true)
   }
 }

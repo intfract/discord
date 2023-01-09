@@ -22,25 +22,13 @@ module.exports = {
   description: "Get information about the bot!",
   type: ApplicationCommandType.ChatInput,
   cooldown: 3000,
-  run: async (client, interaction) => {
+  run: async (client, interaction, ...args) => {
     const embed = new EmbedBuilder()
       .setTitle(`Help`)
       .setDescription('Click on the buttons to navigate through the help pages!')
       .setThumbnail(client.user.displayAvatarURL({ size: 256 }))
       .setColor('#2f3136')
       .setTimestamp()
-
-    // for (const [k, v] of client.slashCommands) {
-    //   let cmd = k
-    //   if (v.options) {
-    //     for (const option of v.options) {
-    //       cmd += ` ${option.name}:${types[option.type]}`
-    //     }
-    //   }
-    //   embed.addFields(
-    //     { name: cmd, value: v.description },
-    //   )
-    // }
 
     const components = []
     const groups = fs.readdirSync('./slash')
@@ -57,14 +45,18 @@ module.exports = {
     const row = new ActionRowBuilder()
       .addComponents(components)
 
-    return interaction.reply({ embeds: [embed], components: [row] }).then(m => {
-      const collector = m.createMessageComponentCollector({ time: 15000 })
+    return interaction.reply({ embeds: [embed], components: [row] }).then(message => {
+      const collector = message.createMessageComponentCollector({ time: 15000 })
 
       collector.on('collect', async (i) => {
         if (!i.isButton()) return
 
         await i.deferUpdate()
-        if (i.user.id !== interaction.user.id) return i.followUp({ content: `These buttons aren't for you!`, ephemeral: true })
+        if (args[0]) {
+          if (i.user.id !== interaction.author.id) return i.followUp({ content: `These buttons aren't for you!`, ephemeral: true })
+        } else {
+          if (i.user.id !== interaction.user.id) return i.followUp({ content: `These buttons aren't for you!`, ephemeral: true })
+        }
 
         const title = i.customId.split(':')[1]
 
@@ -74,21 +66,38 @@ module.exports = {
           .setColor('#2f3136')
           .setTimestamp()
 
-        const files = fs.readdirSync(`./slash/${title}`).filter(file => file.endsWith('.js'))
-        for (const file of files) {
-          const command = require(`../${title}/${file}`)
-          let cmd = command.name
-          if (command.options) {
-            for (const option of command.options) {
-              cmd += ` ${option.name}:${types[option.type]}`
+        if (args[0]) {
+          const files = fs.readdirSync(`./linear`).filter(file => file.endsWith('.js'))
+          for (const file of files) {
+            const command = require(`../../linear/${file}`)
+            let cmd = command.name
+            if (command.options) {
+              for (const option of command.options) {
+                cmd += ` ${option.name}:${types[option.type]}`
+              }
             }
+            section.addFields(
+              { name: cmd, value: command.description }
+            )
           }
-          section.addFields(
-            { name: cmd, value: command.description }
-          )
-        }
+          return message.edit({ embeds: [section] }) 
+        } else {
+          const files = fs.readdirSync(`./slash/${title}`).filter(file => file.endsWith('.js'))
+          for (const file of files) {
+            const command = require(`../${title}/${file}`)
+            let cmd = command.name
+            if (command.options) {
+              for (const option of command.options) {
+                cmd += ` ${option.name}:${types[option.type]}`
+              }
+            }
+            section.addFields(
+              { name: cmd, value: command.description }
+            )
+          }
 
-        return m.interaction.editReply({ embeds: [section] })
+          return message.interaction.editReply({ embeds: [section] })
+        }
       })
 
       collector.on('end', (collected, reason) => {
@@ -97,9 +106,9 @@ module.exports = {
           for (const item of row.components) {
             item.setDisabled(true)
           }
-          interaction.editReply({ components: [row] })
+          ((args[0]) ? message.edit({ components: [row] }) : interaction.editReply({ components: [row] }))
         }
       })
     })
   }
-};
+}
