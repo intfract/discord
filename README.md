@@ -21,6 +21,10 @@ This bot mainly operates on slash commands. Currently, there are 3 categories wi
   - avatar
   - embed
   - profile
+  - reactroles
+  - reactembed
+
+This bot stores reaction roles information by writing to a `reactions.discord` file which contains information about the `message.id`, roles, and emojis. 
 
 ## Debugging 
 
