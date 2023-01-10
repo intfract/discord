@@ -24,7 +24,12 @@ This bot mainly operates on slash commands. Currently, there are 3 categories wi
   - reactroles
   - reactembed
 
-This bot stores reaction roles information by writing to a `reactions.discord` file which contains information about the `message.id`, roles, and emojis. 
+This bot stores reaction roles information by writing to a `reactions.discord` file which contains information about the `message.id`, roles, and emojis. It is also capable of executing scripts delivered by discord users. 
+> Check the interactionCreate.js event and the fract.js file to make sure the eval is still safe!
+
+## Security
+
+The `data.fjs` file prevents malicious users from **hacking** the bot and stealing **token** information from the `process.env` object. Malicious code can not access `eval` to get past security implementations. 
 
 ## Debugging 
 

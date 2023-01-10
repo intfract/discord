@@ -1,4 +1,10 @@
 // $
+function eval() {
+  return null
+}
+
+process.env = {}
+
 const server = {
   name: '$.guild.name',
   id: '$.guild.id',

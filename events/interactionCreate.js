@@ -32,8 +32,10 @@ function format(data, indent) {
     return `${(data.includes('async')) ? 'Async' : ''}Function: ${f}`
   } else if (type(data) === 'Number') {
     return data
+  } else if (type(data) === 'Undefined') {
+    return 'undefined'
   } else {
-    return `Instance of ${data.constructor.name}: ${data}`
+    return `Instance of ${(data.constructor.name) ? data.constructor.name : 'Unknown Class'}: ${data}`
   }
 }
 
@@ -63,6 +65,7 @@ module.exports = {
       let ouput
       const data = fs.readFileSync('data.fjs', 'utf-8')
       let code = fract(data.split(/\/\/[ ]?\$[ ]*/g)[1], interaction)
+      // (new Function("eval('')"))() could be a security threat
       try {
         const exe = (new Function(`${code}; ${input}`))
         result = exe()
