@@ -16,7 +16,7 @@ module.exports = {
   run: async (client, interaction, ...args) => {
     const guild = client.guilds.cache.get(interaction.guild.id)
     let user
-    if (args) {
+    if (args[0]) {
       const member = guild.members.cache.get(args[0].substring(2, args[0].length - 1))
       if (member) {
         user = member.user

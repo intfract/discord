@@ -30,8 +30,8 @@ function format(data, indent) {
     data = data.toString()
     const f = data.match(/\([	-~]*/g)[0]
     return `${(data.includes('async')) ? 'Async' : ''}Function: ${f}`
-  } else if (type(data) === 'Number') {
-    return data
+  } else if (['Number', 'Boolean'].includes(type(data))) {
+    return data.toString()
   } else if (type(data) === 'Undefined') {
     return 'undefined'
   } else {
@@ -71,10 +71,23 @@ module.exports = {
         result = exe()
         console.log(result)
         output = format(result)
+        const methods = input.match(/(channel.send)[ ]*\(.+\)/g)
+        console.log(methods)
+        if (methods) {
+          for (const method of methods) {
+            try {
+              eval(`(() => {process.env = {}; return interaction.${method}.catch(e => console.log(e))})()`)
+            } catch (e) {
+              console.log(e)
+            }
+          }
+        } else {
+          
+        }
       } catch (e) {
         output = e.stack.split('\n').splice(0, 3).join('\n')
       }
-      await interaction.reply({ content: (output) ? output : 'Your code did not return anything!', ephemeral: true })
+      interaction.reply({ content: (output) ? output : 'Your code did not return anything!', ephemeral: true }).catch(e => console.log(e))
     }
   }
 }

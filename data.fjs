@@ -1,6 +1,6 @@
 // $
 function eval() {
-  return null
+  return null;
 }
 
 process.env = {}
@@ -8,4 +8,11 @@ process.env = {}
 const server = {
   name: '$.guild.name',
   id: '$.guild.id',
-};
+}
+
+const channel = {
+  send({ content }) {
+    if (content) return true;
+    return false;
+  }
+}
