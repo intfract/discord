@@ -11,6 +11,9 @@ const server = {
 }
 
 client.token = null
+client.login = null
+client.destroy = null
+client.on = null
 
 const channel = {
   send({ content, embeds }) {
