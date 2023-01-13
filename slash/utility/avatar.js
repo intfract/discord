@@ -36,6 +36,7 @@ module.exports = {
 
     const formats = ['png', 'jpg', 'jpeg', 'gif']
     const components = []
+    if (!user.avatar) return interaction.reply({ content: `${user.username} does not have an avatar!` })
     formats.forEach(format => {
       let imageOptions = { extension: format, forceStatic: format == 'gif' ? false : true }
 

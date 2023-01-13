@@ -62,7 +62,7 @@ module.exports = {
       }
     } else if (interaction.isModalSubmit()) {
       const input = interaction.fields.getTextInputValue('script')
-      let ouput
+      let output
       const data = fs.readFileSync('data.fjs', 'utf-8')
       let code = fract(data.split(/\/\/[ ]?\$[ ]*/g)[1], interaction)
       // (new Function("eval('')"))() could be a security threat
@@ -88,10 +88,18 @@ module.exports = {
             }
           }
         } else {
-          const exe = (new Function(`${code}; ${input}`))
-          result = exe()
-          console.log(result)
-          output = format(result)
+          try {
+            const action = `(() => { ${code};
+            try { 
+              ${input}; 
+            } catch (e) {
+              console.log(e)
+            } })()`
+            output = eval(action)
+            output = format(output)
+          } catch (e) {
+            console.log(e)
+          }
         }
       } catch (e) {
         output = e.stack.split('\n').splice(0, 3).join('\n')

@@ -85,7 +85,8 @@ module.exports = {
               .setDescription(`This bot mainly uses JavaScript syntax.`)
               .addFields(
                 { name: 'Execution', value: 'The bot will reply with the value of the `return` statement!' },
-                { name: 'Interaction Methods', value: 'The bot can execute interaction methods like `channel.send` as `interaction.channel.send`!' },
+                { name: 'Methods', value: 'The bot can execute interaction methods like `channel.send` as `interaction.channel.send`!' },
+                { name: 'Builders', value: 'The bot will reply with the value of the `return` statement!' },
               )
           } else {
             const files = fs.readdirSync(`./linear`).filter(file => file.endsWith('.js'))
@@ -117,7 +118,7 @@ module.exports = {
               { name: cmd, value: command.description }
             )
           }
-
+          console.log((new EmbedBuilder()).data)
           return message.interaction.editReply({ embeds: [section] })
         }
       })
