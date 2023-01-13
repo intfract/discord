@@ -1,7 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js')
 const fs = require('fs')
 const client = require('..')
-const fract = require('../fract')
 
 function type(data) {
   return Object.prototype.toString.call(data).slice(8, -1)
@@ -12,6 +11,7 @@ function isObject(data) {
 }
 
 function format(data, indent) {
+  console.log(type(data))
   if (!indent) indent = 0
   if (type(data) === 'Array') {
     for (let i = 0; i < data.length; i++) {
@@ -21,9 +21,15 @@ function format(data, indent) {
   } else if (type(data) === 'String') {
     return `"${data}"`
   } else if (isObject(data)) {
-    let s = `${(!indent) ? `Object(${Object.keys(data).length}): ` : ''}{\n`
+    let s = `${(!indent) ? `Object (${Object.keys(data).length}) ` : ''}{\n`
     for (const [k, v] of Object.entries(data)) {
-      s += `**    ${' '.repeat(indent * 4)}**${k}: ${(isObject(data)) ? format(v, 1) : format(v)},\n`
+      s += `**    ${' '.repeat(indent * 4)}**${format(k)}: ${(isObject(data)) ? format(v, 1) : format(v)},\n`
+    }
+    return s += `${' '.repeat(indent * 4)}}`
+  } else if (type(data) === 'Map') {
+    let s = `${(!indent) ? `Map (${data.size}) ` : ''}{\n`
+    for (const [k, v] of data) {
+      s += `**    ${' '.repeat(indent * 4)}**${format(k)}: ${(isObject(data) || type(data) === 'Map' || type(data) === 'Object') ? format(v, 1) : format(v)},\n`
     }
     return s += `${' '.repeat(indent * 4)}}`
   } else if (['Function', 'AsyncFunction'].includes(type(data))) {
@@ -34,9 +40,22 @@ function format(data, indent) {
     return data.toString()
   } else if (type(data) === 'Undefined') {
     return 'undefined'
+  } else if (type(data) === 'Object') {
+    let s = `${(!indent) ? `Object (${Object.keys(data).length}) ` : ''}{\n`
+    for (const [k, v] of Object.entries(data)) {
+      s += `**    ${' '.repeat(indent * 4)}**${format(k)}: ${(isObject(data)) ? format(v, 1) : format(v)},\n`
+    }
+    return s += `${' '.repeat(indent * 4)}}`
   } else {
-    return `Instance of ${(data.constructor.name) ? data.constructor.name : 'Unknown Class'}: ${data}`
+    return `Instance of ${(data.constructor.name) ? data.constructor.name : 'Unknown Class'}: ${format(data.toString())}`
   }
+}
+
+function validate({ content, embeds, components }) {
+  let o = {}
+  if (content && type(content) === 'String') o.content = content
+  if (o.content || o.embeds || o.components) return o
+  return false
 }
 
 module.exports = {
@@ -64,43 +83,38 @@ module.exports = {
       const input = interaction.fields.getTextInputValue('script')
       let output
       const data = fs.readFileSync('data.fjs', 'utf-8')
-      let code = fract(data.split(/\/\/[ ]?\$[ ]*/g)[1], interaction)
+      let code = data.split(/\/\/[ ]?\$[ ]*/g)[1]
       // (new Function("eval('')"))() could be a security threat
       try {
-        const methods = input.match(/(channel.send)[ ]*\(.+\)/g)
-        console.log(methods) // channel.send({ content: server.name })
-        console.log(input)
-        if (methods) {
-          for (const method of methods) {
-            try {
-              const action = `(() => { ${code};
-              try { 
-                ${input.replace(/(channel.send)[ ]*\(.+\)/g, `interaction.${method}.catch(e => console.log(e))`)}; 
-              } catch (e) {
-                console.log(e)
-              } })()`
-              console.log(action)
-              output = eval(action)
-              console.log(output)
-              output = format(output)
-            } catch (e) {
-              console.log(e)
-            }
-          }
-        } else {
-          try {
-            const action = `(() => { ${code};
-            try { 
-              ${input}; 
-            } catch (e) {
-              console.log(e)
-            } })()`
-            output = eval(action)
-            output = format(output)
-          } catch (e) {
-            console.log(e)
-          }
-        }
+        output = (new Function('process', 'interaction', 'client', `${code}; ${input}`))(
+          null, 
+          {
+            reply(obj) {
+              const msg = validate(obj)
+              if (msg) interaction.reply(msg).catch(e => console.log(e))
+              return msg
+            },
+            channel: {
+              send(obj) {
+                const msg = validate(obj)
+                if (msg) interaction.channel.send(msg).catch(e => console.log(e))
+                return msg
+              },
+            },
+            guild: {
+              id: interaction.guild.id,
+              name: interaction.guild.name,
+            },
+          }, 
+          {
+            guilds: {
+              cache: {
+                size: client.guilds.cache.size,
+              },
+            },
+          },
+        )
+        output = format(output)
       } catch (e) {
         output = e.stack.split('\n').splice(0, 3).join('\n')
       }

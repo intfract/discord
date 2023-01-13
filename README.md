@@ -29,9 +29,19 @@ This bot stores reaction roles information by writing to a `reactions.discord` f
 
 ## Security
 
-The `data.fjs` file prevents malicious users from **hacking** the bot and stealing **token** information from the `process.env` object. Malicious code can not access `eval` to get past security implementations. 
+It is important to note that `new Function()` constructors should always be used instead of `eval()`. **Never pass discord interfaces directly** into the function constructor. 
 
-The bot token can also be found in the `client.token` property. 
+### Avoid ✖
+
+```js
+console.log((new Function('interaction', `interaciton.reply({ content: interaction.guild.client.token })`))(interaction)) // exposes MessageInteraction, Guild, and Client
+```
+
+### Do ✓
+
+```js
+console.log((new Function('ctx', `ctx.reply({ content: 'Hello, World!' })`))({ reply(message) { interaction.reply(message) } })) // replies to a MessageInteraction
+```
 
 ## Debugging 
 
