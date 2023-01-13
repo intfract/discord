@@ -67,26 +67,36 @@ module.exports = {
       let code = fract(data.split(/\/\/[ ]?\$[ ]*/g)[1], interaction)
       // (new Function("eval('')"))() could be a security threat
       try {
-        const exe = (new Function(`${code}; ${input}`))
-        result = exe()
-        console.log(result)
-        output = format(result)
         const methods = input.match(/(channel.send)[ ]*\(.+\)/g)
-        console.log(methods)
+        console.log(methods) // channel.send({ content: server.name })
+        console.log(input)
         if (methods) {
           for (const method of methods) {
             try {
-              eval(`(() => {process.env = {}; return interaction.${method}.catch(e => console.log(e))})()`)
+              const action = `(() => { ${code};
+              try { 
+                ${input.replace(/(channel.send)[ ]*\(.+\)/g, `interaction.${method}.catch(e => console.log(e))`)}; 
+              } catch (e) {
+                console.log(e)
+              } })()`
+              console.log(action)
+              output = eval(action)
+              console.log(output)
+              output = format(output)
             } catch (e) {
               console.log(e)
             }
           }
         } else {
-          
+          const exe = (new Function(`${code}; ${input}`))
+          result = exe()
+          console.log(result)
+          output = format(result)
         }
       } catch (e) {
         output = e.stack.split('\n').splice(0, 3).join('\n')
       }
+      console.log(output)
       interaction.reply({ content: (output) ? output : 'Your code did not return anything!', ephemeral: true }).catch(e => console.log(e))
     }
   }

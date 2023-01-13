@@ -31,6 +31,8 @@ This bot stores reaction roles information by writing to a `reactions.discord` f
 
 The `data.fjs` file prevents malicious users from **hacking** the bot and stealing **token** information from the `process.env` object. Malicious code can not access `eval` to get past security implementations. 
 
+The bot token can also be found in the `client.token` property. 
+
 ## Debugging 
 
 ### Replit Bot Login 

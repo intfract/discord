@@ -10,9 +10,11 @@ const server = {
   id: '$.guild.id',
 }
 
+client.token = null
+
 const channel = {
-  send({ content }) {
-    if (content) return true;
-    return false;
+  send({ content, embeds }) {
+    if (content) return content;
+    return new Error('Message has no content!');
   }
 }

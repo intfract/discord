@@ -85,12 +85,7 @@ module.exports = {
               .setDescription(`This bot mainly uses JavaScript syntax.`)
               .addFields(
                 { name: 'Execution', value: 'The bot will reply with the value of the `return` statement!' },
-                { name: 'Output', value: 'The reply will provide information about the return type.' },
-                { name: 'Numbers', value: 'Numbers are not styled in the reply.' },
-                { name: 'Strings', value: 'Strings are wrapped with double quotes in the reply.' },
-                { name: 'Arrays', value: 'Arrays are wrapped with square brackets and display the length of the array.' },
-                { name: 'Objects', value: 'Objects are wrapped with curly brackets and display the number of keys.' },
-                { name: 'Functions', value: 'Functions display their parameters and insides.' },
+                { name: 'Interaction Methods', value: 'The bot can execute interaction methods like `channel.send` as `interaction.channel.send`!' },
               )
           } else {
             const files = fs.readdirSync(`./linear`).filter(file => file.endsWith('.js'))

@@ -4,10 +4,10 @@ const { Routes } = require('discord-api-types/v9')
 const { REST } = require('@discordjs/rest')
 const rest = new REST({
   version: '9'
-}).setToken(process.env.token);
+}).setToken(process.env.token)
 
 module.exports = (client) => {
-  const slashCommands = [];
+  const slashCommands = []
   fs.readdirSync('./slash/').forEach(async dir => {
     const files = fs.readdirSync(`./slash/${dir}/`).filter(file => file.endsWith('.js'))
     
