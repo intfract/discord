@@ -33,18 +33,31 @@ This bot can execute `script` commands that communicate directly with the Discor
 
 ## Security
 
-It is important to note that `new Function()` constructors should always be used instead of `eval()`. **Never pass discord interfaces directly** into the function constructor. 
+It is important to note that `new Function()` constructors should always be used instead of `eval()`. **Never pass discord interfaces directly** into the function constructor. Make sure to read the [Discord.js Documentation](https://discord.js.org/#/docs/discord.js/main/class/Client) when adding features to the *script* command in the `interactionCreate.js` file.
 
 ### Avoid ✕
 
+The `Client`, `Guild`, and `RoleManager` classes can be abused easily. 
+
 ```js
-console.log((new Function('interaction', `interaciton.reply({ content: interaction.guild.client.token })`))(interaction)) // exposes MessageInteraction, Guild, and Client
+(new Function('interaction', `interaciton.reply({ content: interaction.guild.client.token })`))(interaction)
+// exposes MessageInteraction, Guild, and Client.token
 ```
 
 ### Do ✓
 
+The user is limited to the context which only contains a reply function.
+
 ```js
-console.log((new Function('ctx', `ctx.reply({ content: 'Hello, World!' })`))({ reply(message) { interaction.reply(message) } })) // replies to a MessageInteraction
+(new Function('ctx', `ctx.reply({ content: 'Hello, World!' })`))({ reply(message) { interaction.reply(message) } })
+// only replies to MessageInteraction
+```
+
+Nullifying the `process` object prevents hackers from touching your **token**!
+
+```js
+(new Function('process', `return process.env.token`))(null)
+// cannot read property 'env' of null
 ```
 
 ## Debugging 
