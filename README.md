@@ -4,7 +4,9 @@ A Modern Discord Utility Bot with **SAFE** Script Execution!
 
 ## Events 
 
-This bot has an effective event handler. For now, it watches: 
+This bot has an effective event handler. The basic events are listed below. 
+- debug
+- error
 - interactionCreate
 - messageCreate
 - ready
@@ -59,6 +61,8 @@ Nullifying the `process` object prevents hackers from touching your **token**!
 (new Function('process', `return process.env.token`))(null)
 // cannot read property 'env' of null
 ```
+
+During **debugging** the client will log the bot's **token** unless you prevent it by using a conditional or by removing the `console.log` from the `events/debug.js` file completely.  
 
 ## Debugging 
 

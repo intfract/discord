@@ -86,7 +86,7 @@ module.exports = {
               .addFields(
                 { name: 'Execution', value: 'The bot will reply with the value of the `return` statement!' },
                 { name: 'Methods', value: 'The bot can execute interaction methods like `channel.send` as `interaction.channel.send`!' },
-                { name: 'Builders', value: 'The bot will reply with the value of the `return` statement!' },
+                { name: 'Builders', value: 'The bot can send embeds. See https://discord.js.org/#/docs/builders/main/class/EmbedBuilder for more information!' },
               )
           } else {
             const files = fs.readdirSync(`./linear`).filter(file => file.endsWith('.js'))
@@ -103,7 +103,7 @@ module.exports = {
               )
             }
           }
-          return message.edit({ embeds: [section] }) 
+          return message.edit({ embeds: [section] })
         } else {
           const files = fs.readdirSync(`./slash/${title}`).filter(file => file.endsWith('.js'))
           for (const file of files) {
