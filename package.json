@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node . && node deploy.js",
+    "dev": "node index.js",
     "prod": "node .",
     "fjs": "node fract.js"
   },
