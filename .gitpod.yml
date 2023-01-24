@@ -11,7 +11,7 @@ tasks:
         echo "Found .env in workspace"
       else
         if [ -z "${DOTENV}" ]; then
-          cp .env.example .env
+          cp .env
         else
           # After making changes to .env, run this line to persist it to $DOTENV
           #   gp env DOTENV="$(base64 .env | tr -d '\n')"
