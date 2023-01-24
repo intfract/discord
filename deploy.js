@@ -1,4 +1,5 @@
 const fs = require('fs')
+require('dotenv').config()
 const { PermissionsBitField } = require('discord.js')
 const { Routes } = require('discord-api-types/v9')
 const { REST } = require('@discordjs/rest')

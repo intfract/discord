@@ -1,0 +1,7 @@
+# flyctl launch added from .gitignore
+**/replit.nix
+**/.replit
+**/.config
+**/node_modules
+**/.env
+fly.toml
