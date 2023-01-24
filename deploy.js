@@ -38,7 +38,7 @@ module.exports = (client) => {
       )
       console.log(`/ commands registered`)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   })();
 }
