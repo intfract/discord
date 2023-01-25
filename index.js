@@ -2,7 +2,8 @@ const { Client, GatewayIntentBits, Partials, Collection, ActivityType } = requir
 require('dotenv').config()
 const fs = require('fs')
 
-require('http').createServer((req, res) => res.end(process.version)).listen()
+const port = process.env.PORT || 3000
+require('http').createServer((req, res) => res.end(process.version)).listen(port)
 const events = require('./events')
 const deploy = require('./deploy')
 
