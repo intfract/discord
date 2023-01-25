@@ -3,7 +3,7 @@ const chatgpt = require('../../openai/chatgpt')
 
 module.exports = {
   name: 'chatgpt',
-  description: "Display a user's avatar!",
+  description: "Get a response from ChatGPT!",
   type: ApplicationCommandType.ChatInput,
   cooldown: 3000,
   options: [
