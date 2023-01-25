@@ -153,6 +153,7 @@ Hosting can be a problem because discord **ratelimits** replit. After 24 hours y
 
 If you encounter an **ERROR** after the run command, read the error message carefully and troubleshoot. 
 - The missing `node:events` module error suggests that the current version of node is too old!
+  - [Specify a node version](https://render.com/docs/node-version) by adding a `.node-version` file and typing `19.5.0`
 - The `InvalidTokenError` error suggests a few things. 
   - You have provided the wrong token! 
   - You have made a mistake in the `.env` file by using quotes! 
