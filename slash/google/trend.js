@@ -24,7 +24,8 @@ module.exports = {
   ],
   run: async (client, interaction, ...args) => {
     const query = interaction.options.get('query').value
-    let type = interaction.options.get('type').value
+    let type = interaction.options.get('type')
+    if (!type) type = type.value
     const seconds = 5
 
     const embed = new EmbedBuilder()
