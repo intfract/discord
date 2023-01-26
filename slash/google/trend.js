@@ -25,7 +25,11 @@ module.exports = {
   run: async (client, interaction, ...args) => {
     const query = interaction.options.get('query').value
     let type = interaction.options.get('type')
-    if (!type) type = type.value
+    if (type) {
+      type = type.value
+    } else {
+      type = 'TIMESERIES'
+    }
     const seconds = 5
 
     const embed = new EmbedBuilder()
