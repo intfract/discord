@@ -93,7 +93,7 @@ module.exports = {
         const row = new ActionRowBuilder().addComponents(script)
 
         modal.addComponents(row)
-        interaction.showModal(modal)
+        return interaction.showModal(modal)
       }
     } else if (interaction.isModalSubmit()) {
       const input = interaction.fields.getTextInputValue('script')

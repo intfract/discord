@@ -40,9 +40,13 @@ module.exports = {
           .setStyle('Primary')
           .setCustomId('help:linear'),
         new ButtonBuilder()
+          .setLabel('ChatGPT')
+          .setStyle('Primary')
+          .setCustomId('help:chatgpt'),
+        new ButtonBuilder()
           .setLabel('Scripting')
           .setStyle('Success')
-          .setCustomId('help:scripting')
+          .setCustomId('help:scripting'),
       )
     } else {
       for (const group of groups) {
@@ -82,13 +86,13 @@ module.exports = {
         if (args[0]) {
           if (title === 'scripting') {
             section
-              .setDescription(`This bot mainly uses JavaScript syntax.`)
+              .setDescription(`This bot can execute JavaScript code and access some information from the discord framework.`)
               .addFields(
                 { name: 'Execution', value: 'The bot will reply with the value of the `return` statement!' },
-                { name: 'Methods', value: 'The bot can execute interaction methods like `channel.send` as `interaction.channel.send`!' },
+                { name: 'Methods', value: 'The bot can execute interaction methods like `interaction.channel.send`!' },
                 { name: 'Builders', value: 'The bot can send embeds. See https://discord.js.org/#/docs/builders/main/class/EmbedBuilder for more information!' },
               )
-          } else {
+          } else if (title === 'linear') {
             const files = fs.readdirSync(`./linear`).filter(file => file.endsWith('.js'))
             for (const file of files) {
               const command = require(`../../linear/${file}`)
@@ -102,6 +106,13 @@ module.exports = {
                 { name: cmd, value: command.description }
               )
             }
+          } else if (title === 'chatgpt') {
+            section
+              .setDescription(`This bot can interact with Open AI services and give intelligent responses.`)
+              .addFields(
+                { name: 'ChatGPT', value: 'The bot can relay your prompt to ChatGPT and return a response!' },
+                { name: 'Code', value: 'It is recommended that you ask ChatGPT to style its answer with markdown!' },
+              )
           }
           return message.edit({ embeds: [section] })
         } else {

@@ -170,7 +170,7 @@ require('http').createServer((req, res) => res.end(process.version)).listen(port
 
 [Fly.io](https://fly.io) offers limited features for free if you have a credit card. Fly only asks for a credit card to verify deployments. This can be solved by searching google for random credit cards with expiry dates. Honestly, it takes a bit of effort.
 
-The `bas.sh` file contains some scripts for a fly deployment although the docs explain the process clearly. Most online development platforms like Gitpod and Replit use linux. The commands may vary between linux, windows, and mac. The following code is for *Visual Studio Code Browser* Gitpod users.
+The `ba.sh` file contains some scripts for a fly deployment although the docs explain the process clearly. Most online development platforms like Gitpod and Replit use linux. The commands may vary between linux, windows, and mac. The following code is for *Visual Studio Code Browser* Gitpod users.
 
 ```sh
 curl -L https://fly.io/install.sh | sh
@@ -185,7 +185,7 @@ Deploying the bot with `fly launch` will create files called `fly.toml` and `.do
 The bot can be launched with environment variables. 
 
 ```sh
-flyctl secrets set token=YOUR_BOT_TOKEN
+flyctl secrets set token=YOUR_BOT_TOKEN client=YOUR_CLIENT_ID
 ```
 
 ## Debugging 
