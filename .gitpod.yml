@@ -5,17 +5,6 @@
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
 
 tasks:
-  - name: Restore .env file
+  - name: Resolve Dependencies
     command: |
-      if [ -f .env ]; then
-        echo "Found .env in workspace"
-      else
-        if [ -z "${DOTENV}" ]; then
-          cp .env
-        else
-          # After making changes to .env, run this line to persist it to $DOTENV
-          #   gp env DOTENV="$(base64 .env | tr -d '\n')"
-          echo "Restoring .env from Gitpod"
-          echo "${DOTENV}" | base64 -d > .env
-        fi
-      fi
+      npm install
