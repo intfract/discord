@@ -70,6 +70,8 @@ During **debugging** the client will log the bot's **token** unless you prevent 
 
 Open AI functions are stored in the `openai` folder which contains a `chatgpt.js` file. Most interactions with Open AI are asynchronous and can take over 3 seconds to complete. This means that `Collector` objects are required for longer completions. The `openai` package is available on [NPM](https://npmjs.org/package/openai).
 
+Make sure to grab your API key from [Open AI](https://beta.openai.com/docs/quickstart/) and add it to your environment variables. 
+
 ```js
 const { Configuration, OpenAIApi} = require('openai')
 require('dotenv').config()
@@ -139,7 +141,7 @@ Hosting can be a problem because discord **ratelimits** replit. After 24 hours y
 
 ### Render 
 
-[Render](https://render.com) is free and mostly free of hassle. There are some things to remember about environment variables and node versions. 
+[Render](https://render.com) provides most of the resources required to host a discord bot for free. Although, there are some things to remember about environment variables, uptime, and node versions. 
 
 1. Create an account and log in with GitHub!
 2. Click `New`!

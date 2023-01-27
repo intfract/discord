@@ -99,7 +99,11 @@ module.exports = {
               let cmd = command.name
               if (command.options) {
                 for (const option of command.options) {
-                  cmd += ` ${option.name}:${types[option.type]}`
+                  if (option.required) {
+                    cmd += ` ${option.name}:${types[option.type]}`
+                  } else {
+                    cmd += ` [${option.name}:${types[option.type]}]`
+                  }
                 }
               }
               section.addFields(
