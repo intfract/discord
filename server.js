@@ -34,8 +34,7 @@ function execute(code, locals) {
     }
   }
   const forge = new Function('process', 'eval', 'Function', 'Object', `${s} return ${code.match(/(?<=\${)(.|\n)[^$]+(?=})/g)};`)
-  const output = forge(process, null, null, Object)
-  console.log(output)
+  const output = forge(null, null, null, Object)
   return output
 }
 
@@ -51,11 +50,15 @@ function render(file, locals) {
 }
 
 function route(req, res, locals) {
-  res.send(render(`views/${req.baseUrl + 'index.html'}`, locals))
+  res.send(render(`views${req.originalUrl.split('?')[0] + '/index.html'}`, locals))
 }
 
 app.get('/', (req, res) => {
   route(req, res, { title: 'Discord', message: 'Hello, World!' })
+})
+
+app.get('/status', (req, res) => {
+  route(req, res, { title: 'Discord', version: process.version })
 })
 
 app.listen(port, () => {
