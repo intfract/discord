@@ -190,6 +190,17 @@ The bot can be launched with environment variables.
 flyctl secrets set token=YOUR_BOT_TOKEN client=YOUR_CLIENT_ID
 ```
 
+## Express Server 
+
+This bot comes with an express server and a custom page renderer!
+> Enclosing embedded code in ${} will allow you to evaluate JavaScript locals from the server! 
+
+There is no need to use complex frameworks like `ejs` or `pug` to render your html views. A bleeding-edge router is available at `server.js`!
+
+### Pages 
+
+Do not place any `.html` files in the `public` directory. Pages are rendered from `index.html` files located in the `views` folder. 
+
 ## Debugging 
 
 ### Replit Bot Login 

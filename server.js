@@ -45,7 +45,6 @@ function render(file, locals) {
     console.log(match[0])
     html = html.replace(match[0], execute(match[0], locals))
   }
-  console.log(html)
   return html
 }
 
