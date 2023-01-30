@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const port = process.env.PORT || 3000
 const fs = require('fs')
+const client = require('.')
 
 app.use(express.static('public'))
 
@@ -33,8 +34,8 @@ function execute(code, locals) {
       continue
     }
   }
-  const forge = new Function('process', 'eval', 'Function', 'Object', `${s} return ${code.match(/(?<=\${)(.|\n)[^$]+(?=})/g)};`)
-  const output = forge(null, null, null, Object)
+  const forge = new Function('process', 'eval', 'Function', 'Object', 'include', 'client', `${s} return ${code.match(/(?<=\${)(.|\n)[^$]+(?=})/g)};`)
+  const output = forge(null, null, null, Object, (file) => fs.readFileSync(`views/${file}`, 'utf-8'), client)
   return output
 }
 

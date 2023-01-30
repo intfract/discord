@@ -2,7 +2,6 @@ const { Client, GatewayIntentBits, Partials, Collection, ActivityType } = requir
 require('dotenv').config()
 const fs = require('fs')
 
-const server = require('./server')
 const events = require('./events')
 const deploy = require('./deploy')
 
@@ -27,9 +26,9 @@ for (const command of commands) {
   client.commands.set(file.name, file)
 }
 
-client.prefix = 'dev ';
+client.prefix = 'dev '
 
-module.exports = client;
+module.exports = client
 
 deploy(client)
 events(client)

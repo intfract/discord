@@ -2,6 +2,7 @@ body {
   width: 100%;
   height: 100vh;
   font-family: 'Lexend Deca';
+  color: var(--color);
   background-color: var(--bg-color-soft);
 }
 
@@ -13,4 +14,8 @@ main {
   background-color: var(--bg-color);
   border-radius: 8px;
   box-sizing: border-box;
+}
+
+::marker {
+  color: var(--accent);
 }

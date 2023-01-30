@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node index.js",
-    "prod": "node .",
+    "dev": "node server.js",
+    "prod": "node server.js",
     "fjs": "node fract.js"
   },
   "keywords": [],
