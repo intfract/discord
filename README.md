@@ -2,6 +2,14 @@
 
 This is a powerful discord bot that can interact with ChatGPT, fetch data from Google, and execute JavaScript code safely!
 
+## Running 
+
+Previously, `node .` was used to start the bot. After adding an [express](https://npmjs.com/package/express) server, the best way to run the bot is using `node server.js`. The `scripts.dev` property in the `package.json` file has been set to `node server.js` to maintain consistency and programmnig principles. 
+
+### Package Files 
+
+The `main` property in the `package.json` file determines the `.` file selector and defaults to `index.js`. If the `main` property is set to `server.js`, then `node .` will run the `server.js` file. 
+
 ## Events 
 
 This bot has an effective event handler. The basic events are listed below. 

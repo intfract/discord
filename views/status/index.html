@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>${ title }</title>
-  ${ include('head.html') }
+  <title>#{ title }</title>
+  #{ include('head.html') }
 </head>
 <body>
   <main id="app">
     <h1>STATUS</h1>
     <p>The bot is online!</p>
     <ul>
-      <li>Discord Servers: ${ client.guilds.cache.size }</li>
-      <li>Users: ${ client.users.cache.size }</li>
-      <li>Node Version: ${ version }</li>
+      <li>Discord Servers: #{ client.guilds.cache.size }</li>
+      <li>Users: #{ client.users.cache.size }</li>
+      <li>Node Version: #{ version }</li>
     </ul>
   </main>
 </body> 

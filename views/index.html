@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>${ title }</title>
-  ${ include('head.html') }
+  <title>#{ title }</title>
+  #{ include('head.html') }
 </head>
 <body>
   <main id="app">
     <h1>DISCORD BOT</h1>
     <p>Check out the <a href="/status">status</a> page!</p>
+    <h2>DASHBOARD</h2>
+    <p>Unlock the dashboard by <a href="#{ auth }">verifying yourself</a>!</p>
   </main>
 </body>
 </html>
