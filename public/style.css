@@ -24,6 +24,23 @@ ul {
   padding-inline-start: 32px;
 }
 
+.discord {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 0 auto;
+  margin-block-start: 1em;
+  width: 50%;
+  height: 40px;
+  background-color: var(--color-hard);
+  color: var(--bg-color);
+  border-radius: 4px;
+  border-left: 4px solid var(--accent);
+  box-sizing: border-box;
+}
+
 ::marker {
   color: var(--accent);
 }
