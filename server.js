@@ -54,7 +54,7 @@ function route(req, res, locals) {
 }
 
 app.get('/', (req, res) => {
-  route(req, res, { title: 'Discord', message: 'Hello, World!' })
+  route(req, res, { title: client.user.tag, message: 'Hello, World!' })
 })
 
 app.get('/status', (req, res) => {

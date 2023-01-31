@@ -16,6 +16,14 @@ main {
   box-sizing: border-box;
 }
 
+p, ul {
+  margin-block-end: 0;
+}
+
+ul {
+  padding-inline-start: 32px;
+}
+
 ::marker {
   color: var(--accent);
 }
