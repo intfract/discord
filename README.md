@@ -108,6 +108,8 @@ app.get('/', async (req, res) => {
 })
 ```
 
+Gitpod workspace URLs may change from time to time. The `process.env.GITPOD_WORKSPACE_URL` exposes the workspace URL that can be used to find the server URL. Ternary operators are recommended if you are thinking of [hosting](#hosting). 
+
 ## Security
 
 It is important to note that `new Function()` constructors should always be used instead of `eval()`. **Never pass discord interfaces directly** into the function constructor. Make sure to read the [Discord.js Documentation](https://discord.js.org/#/docs/discord.js/main/class/Client) when adding features to the *script* command in the `interactionCreate.js` file.
@@ -322,8 +324,11 @@ The `invalid_client` and `invalid_code` are the msot common OAuth2 errors.
 1. Check your client id and secret at your developer application dashboard 
   - Reset your client secret if necessary 
   - Update the `.env` file and variables
+  - Make sure you have added your redirect URLs for your development and hosting environment
 2. Check the `client_id` and `client_secret` parameters 
 3. Use the latest `code` after connecting with discord 
+
+Multiple Gitpod redirect URLs may be necessary because Gitpod workspaces can change machines or regions. The subdomain is in the format `${port}-${user}-${repository}-${id}.ws-us${number}` for western US. regions. 
 
 ### Replit Bot Login 
 

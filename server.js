@@ -5,7 +5,16 @@ const fs = require('fs')
 const fetch = require('node-fetch')
 const client = require('.')
 
-const url = (port === 3000) ? `https://discord.com/api/oauth2/authorize?client_id=${process.env.client}&redirect_uri=https%3A%2F%2F3000-intfract-discord-0yhi9voe9w0.ws-us84.gitpod.io&response_type=code&scope=identify%20guilds%20guilds.join%20guilds.members.read` : `https://discord.com/api/oauth2/authorize?client_id=${process.env.client}&redirect_uri=https%3A%2F%2Ffract-m3ac.onrender.com%2F&response_type=code&scope=identify%20guilds%20guilds.join%20guilds.members.read`
+// const url = (port === 3000) ? `https://discord.com/api/oauth2/authorize?client_id=${process.env.client}&redirect_uri=https%3A%2F%2F${port}-${process.env.GITPOD_WORKSPACE_URL.replace('https://', '')}&response_type=code&scope=identify%20guilds%20guilds.join%20guilds.members.read` : `https://discord.com/api/oauth2/authorize?client_id=${process.env.client}&redirect_uri=https%3A%2F%2Ffract-m3ac.onrender.com%2F&response_type=code&scope=identify%20guilds%20guilds.join%20guilds.members.read`
+
+const uri = (process.env.GITPOD_WORKSPACE_URL) ? `https://${port}-${process.env.GITPOD_WORKSPACE_URL.replace('https://', '')}` : `https://fract-m3ac.onrender.com`
+
+const redirect = 'https://discord.com/api/oauth2/authorize?' + new URLSearchParams({
+  client_id: process.env.client,
+  redirect_uri: uri,
+  response_type: 'code',
+  scope: 'identify guilds guilds.join guilds.members.read',
+}).toString()
 
 app.use(express.static('public'))
 
@@ -71,7 +80,7 @@ app.get('/', async (req, res) => {
         client_secret: process.env.secret,
         code,
         grant_type: 'authorization_code',
-        redirect_uri: `https://3000-intfract-discord-0yhi9voe9w0.ws-us84.gitpod.io/`,
+        redirect_uri: uri, // needs checking
         scope: 'identify guilds guilds.join guilds.members.read',
       })
       console.log(params)
