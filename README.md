@@ -309,6 +309,13 @@ Environment variables can sometimes be a pain when deploying or using [Gitpod](h
 
 If your environment variables are not updating, it is because you have set [global environment variables](https://www.gitpod.io/docs/configure/projects/environment-variables) through the Gitpod UI. 
 
+Replit allows direct access to environment variables, but editors like visual studio code require you to install the `dotenv` package. 
+
+```js
+require('dotenv').config() // add .env file variables to process.env
+console.log(process.env)
+```
+
 ### OAuth2 
 
 The `invalid_client` and `invalid_code` are the msot common OAuth2 errors. 

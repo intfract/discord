@@ -1,22 +1,32 @@
 const client = require('..')
-const fs = require('fs');
+const fs = require('fs')
+require('dotenv').config()
+const fetch = require('node-fetch')
 
 module.exports = {
-  respond(reaction, user) {
-    const file = fs.readFileSync('reactions.discord', 'utf-8')
-    const lines = file.split('\n')
-    lines.shift()
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i]
-      x = line.split('=')
-      const id = x[0]
-      if (id === reaction.message.id) {
-        const roles = x[1].split('|')[0].split(',')
-        const emojis = x[1].split('|')[1].split(',')
+  async respond(reaction, user) {
+    if (user.bot) return
+
+    const response = await fetch(`https://crudapi.co.uk/api/v1/reaction_roles`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.crud}`
+      },
+    })
+
+    const data = await response.json()
+    console.log(data)
+
+    for (let i = 0; i < data.items.length; i++) {
+      if (reaction.message.id === data.items[i].id) {
+        const { roles, emojis } = data.items[i]
+        console.log(roles, emojis)
         const role = roles[emojis.indexOf((reaction.emoji.id) ? `<:${reaction.emoji.name}:${reaction.emoji.id}>` : reaction.emoji.name)]
+        if (!role) return
         const guild = client.guilds.cache.get(reaction.message.guildId)
         const member = guild.members.cache.get(user.id)
-        member.roles.add(role.match(/[0-9]+/g)).catch(e => console.log(e))
+        member.roles.add(role.id).catch(e => console.log(e))
         return
       }
     }

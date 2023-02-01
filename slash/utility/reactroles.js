@@ -1,5 +1,7 @@
 const { ApplicationCommandType, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ApplicationCommandOptionType, messageLink, PermissionFlagsBits } = require('discord.js')
 const fs = require('fs')
+require('dotenv').config()
+const fetch = require('node-fetch')
 
 module.exports = {
   name: 'reactroles',
@@ -90,7 +92,17 @@ module.exports = {
       message.react(emoji).catch(e => console.log(e))
     }
 
-    const file = fs.readFileSync('reactions.discord', 'utf-8')
-    fs.writeFileSync('reactions.discord', file + `\n${message.id}=${roles}|${emojis}`)
+    const json = JSON.stringify([{ 'id': message.id, roles, emojis }])
+    const response = await fetch(`https://crudapi.co.uk/api/v1/reaction_roles`, {
+      method: 'POST',
+      body: json,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.crud}`
+      },
+    })
+
+    const data = await response.json()
+    console.log(data)
   }
 }

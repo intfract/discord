@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const port = process.env.PORT || 3000
 const fs = require('fs')
-const { request } = require('undici')
+const fetch = require('node-fetch')
 const client = require('.')
 
 const url = (port === 3000) ? `https://discord.com/api/oauth2/authorize?client_id=${process.env.client}&redirect_uri=https%3A%2F%2F3000-intfract-discord-0yhi9voe9w0.ws-us84.gitpod.io&response_type=code&scope=identify%20guilds%20guilds.join%20guilds.members.read` : `https://discord.com/api/oauth2/authorize?client_id=${process.env.client}&redirect_uri=https%3A%2F%2Ffract-m3ac.onrender.com%2F&response_type=code&scope=identify%20guilds%20guilds.join%20guilds.members.read`
@@ -37,14 +37,14 @@ function execute(code, locals) {
       continue
     }
   }
+  let output = ''
   try {
     const forge = new Function('process', 'eval', 'Function', 'Object', 'include', 'client', `${s} return ${code.match(/(?<=#{)(.|\n)+?(?=})/g)};`)
-    const output = forge(null, null, null, Object, (file) => fs.readFileSync(`views/${file}`, 'utf-8'), client)
-    return output
+    output = forge(null, null, null, Object, (file) => fs.readFileSync(`views/${file}`, 'utf-8'), client)
   } catch (e) {
     console.log(e)
-    return ''
   }
+  return output
 }
 
 function render(file, locals) {
@@ -63,6 +63,7 @@ function route(req, res, locals) {
 
 app.get('/', async (req, res) => {
   const { code } = req.query
+  console.log(code)
   if (code) {
     try {
       const params = new URLSearchParams({
@@ -70,11 +71,11 @@ app.get('/', async (req, res) => {
         client_secret: process.env.secret,
         code,
         grant_type: 'authorization_code',
-        redirect_uri: `https://3000-intfract-discord-0yhi9voe9w0.ws-us84.gitpod.io`,
+        redirect_uri: `https://3000-intfract-discord-0yhi9voe9w0.ws-us84.gitpod.io/`,
         scope: 'identify guilds guilds.join guilds.members.read',
-      }).toString()
+      })
       console.log(params)
-			const tokenResponseData = await request('https://discord.com/api/oauth2/token', {
+			const tokenResponseData = await fetch('https://discord.com/api/oauth2/token', {
 				method: 'POST',
 				body: params,
 				headers: {
@@ -82,7 +83,7 @@ app.get('/', async (req, res) => {
 				},
 			})
 
-			const oauthData = await tokenResponseData.body.json()
+			const oauthData = await tokenResponseData.json()
 			console.log(oauthData)
 
       if (oauthData.error === 'invalid_grant') {
@@ -91,19 +92,20 @@ app.get('/', async (req, res) => {
       } else {
         const access = oauthData.access
         const refresh = oauthData.refresh
-        const userResult = await request('https://discord.com/api/users/@me', {
+        const userResult = await fetch('https://discord.com/api/users/@me', {
           headers: {
             authorization: `${oauthData.token_type} ${access}`,
           },
         })
-        const user = await userResult.body.json()
+        const user = await userResult.json()
         console.log(user)
         route(req, res, { title: 'Discord', message: 'Hello, World!', auth: url, user })
       }
 		} catch (error) {
 			// NOTE: An unauthorized token will not throw an error
 			// tokenResponseData.statusCode will be 401
-			console.log(error);
+			console.log(error)
+      route(req, res, { title: 'Discord', message: 'Hello, World!', auth: url })
 		}
   } else {
     route(req, res, { title: 'Discord', message: 'Hello, World!', auth: url })
