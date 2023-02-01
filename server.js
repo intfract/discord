@@ -1,4 +1,3 @@
-const { error } = require('console')
 const express = require('express')
 const app = express()
 const port = process.env.PORT || 3000
@@ -94,7 +93,7 @@ app.get('/', async (req, res) => {
         const refresh = oauthData.refresh
         const userResult = await request('https://discord.com/api/users/@me', {
           headers: {
-            authorization: `${oauthData.token_type} ${oauthData.access_token}`,
+            authorization: `${oauthData.token_type} ${access}`,
           },
         })
         const user = await userResult.body.json()

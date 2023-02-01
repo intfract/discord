@@ -2,6 +2,8 @@
 
 This is a powerful discord bot that can interact with ChatGPT, fetch data from Google, and execute JavaScript code safely!
 
+Before you continue, please give credit and consider hitting the star button. 
+
 ## Running 
 
 Previously, `node .` was used to start the bot. After adding an [express](https://npmjs.com/package/express) server, the best way to run the bot is using `node server.js`. The `scripts.dev` property in the `package.json` file has been set to `node server.js` to maintain consistency and programmnig principles. 
@@ -29,6 +31,8 @@ This bot mainly operates on slash commands. Currently, there are 3 categories wi
   - ping
 - fun
   - trivia
+- google
+  - trend
 - utility
   - avatar
   - embed
@@ -36,12 +40,73 @@ This bot mainly operates on slash commands. Currently, there are 3 categories wi
   - reactroles
   - reactembed
 
-This bot stores reaction roles information by writing to a `reactions.discord` file which contains information about the `message.id`, roles, and emojis. It is also capable of executing scripts delivered by discord users. 
+### Data Storage 
+
+This bot stores reaction roles information by writing to a `reactions.discord` file which contains information about the `message.id`, roles, and emojis. The problem with storing data in files is that you will lose reaction roles between environments during hosting. The `reactions.discord` file will probably reset after every deployment. 
+
+Try to improve on the **reaction roles** by using [PostgreSQL](https://render.com/docs/databases), [MongoDB](https://mongodb.com), or [crud:api](https://crudapi.co.uk). 
+> {crud:api} is a simple cloud database with a RESTful API based on the standard CRUD operations so you can add cloud storage to your project quickly and easily 
 
 ## Linear Commands
 
-This bot can execute `script` commands that communicate directly with the Discord framework.
-> Check the interactionCreate.js event for any vulnerabilities!
+This bot can execute `script` commands that communicate directly with the server. Read the [security](#security) section for more information. 
+
+## Dashboard 
+
+This bot comes with a dashboard as well. The [guide](https://discordjs.guide/oauth2/) provides further information about [OAuth2](#oauth2). 
+1. Add redirects in the general OAuth2 tab `https://discord.com/developers/applications/${client_id}/oauth2/general`
+2. Configure the URL Generator by selecting scopes
+3. Adapt the code in the guide to your needs 
+
+```js
+// MUST BE ASYNCHRONOUS
+app.get('/', async (req, res) => {
+  const { code } = req.query
+  if (code) {
+    try {
+      const params = new URLSearchParams({
+        client_id: process.env.client, // CLIENT_ID
+        client_secret: process.env.secret, // CLIENT_SECRET
+        code,
+        grant_type: 'authorization_code',
+        redirect_uri: `http://localhost:${port}`, // REPLACE WITH YOUR REPLIT OR GITPOD URL
+        scope: 'identify guilds guilds.join guilds.members.read', // separate scopes with spaces
+      }).toString()
+      console.log(params)
+			const tokenResponseData = await request('https://discord.com/api/oauth2/token', {
+				method: 'POST',
+				body: params,
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+			})
+
+			const oauthData = await tokenResponseData.body.json()
+			console.log(oauthData)
+
+      if (oauthData.error === 'invalid_grant') {
+        console.log(`OAUTH ERROR: ${oauthData.error}`)
+        route(req, res, { title: 'Discord', message: 'Hello, World!', auth: url })
+      } else {
+        const access = oauthData.access
+        const refresh = oauthData.refresh
+        const userResult = await request('https://discord.com/api/users/@me', {
+          headers: {
+            authorization: `${oauthData.token_type} ${access}`,
+          },
+        })
+        const user = await userResult.body.json()
+        console.log(user)
+        route(req, res, { title: 'Discord', message: 'Hello, World!', auth: url, user }) // discord redirect route
+      }
+		} catch (error) {
+			console.log(error);
+		}
+  } else {
+    route(req, res, { title: 'Discord', message: 'Hello, World!', auth: url }) // default route
+  }
+})
+```
 
 ## Security
 
@@ -190,9 +255,8 @@ export PATH="$FLYCTL_INSTALL/bin:$PATH"
 ```
 
 Deploying the bot with `fly launch` will create files called `fly.toml` and `.dockerignore` that have already been included in this repository. Make sure to remove the `fly.toml` and add a new one. 
-> Environment variables are ignored by git and change between environments! 
 
-The bot can be launched with environment variables. 
+The bot can be launched with environment variables through the shell. 
 
 ```sh
 flyctl secrets set token=YOUR_BOT_TOKEN client=YOUR_CLIENT_ID
@@ -200,10 +264,38 @@ flyctl secrets set token=YOUR_BOT_TOKEN client=YOUR_CLIENT_ID
 
 ## Express Server 
 
-This bot comes with an express server and a custom page renderer!
-> Enclosing embedded code in ${} will allow you to evaluate JavaScript locals from the server! 
+This bot comes with an express server and a custom page renderer! 
+> Enclosing embedded code in #{} will allow you to evaluate JavaScript locals from the server! 
 
 There is no need to use complex frameworks like `ejs` or `pug` to render your html views. A bleeding-edge router is available at `server.js`!
+
+### Rendering Example 
+
+You can also use static components using the `include(file: string)` function. Static components are any `.html` files that are not named `index.html`. 
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>#{ title }</title>
+  #{ include('head.html') }
+</head>
+<body>
+  <main id="app">
+    <h1>DISCORD BOT</h1>
+    <p>Check out the <a href="/status">status</a> page!</p>
+    <h2>DASHBOARD</h2>
+    <p>Unlock the dashboard by <a href="#{ auth }">verifying yourself</a>!</p>
+    <div class="discord">
+      <span class="avatar"></span>
+      <span class="user">#{ user.username + '#' + user.discriminator }</span>
+    </div>
+  </main>
+</body>
+</html>
+```
+
+Erros are suppressed and logged. Bad templates like an undefined `user` will simply return blank stirngs. Ternary operators can be used to adjust the behaviour of bad templates. 
 
 ### Pages 
 
@@ -211,9 +303,24 @@ Do not place any `.html` files in the `public` directory. Pages are rendered fro
 
 ## Debugging 
 
+### Env 
+
+Environment variables can sometimes be a pain when deploying or using [Gitpod](https://gitpod.io). Firstly, make sure you are using the **same workspace** instead of creating new workspaces and cloning the same repository again. Your `.gitignore` file should and usually prevents environment variables from being exposed to other programmers. This means that you need to redeclare your variables during [hosting](#hosting).
+
+If your environment variables are not updating, it is because you have set [global environment variables](https://www.gitpod.io/docs/configure/projects/environment-variables) through the Gitpod UI. 
+
+### OAuth2 
+
+The `invalid_client` and `invalid_code` are the msot common OAuth2 errors. 
+1. Check your client id and secret at your developer application dashboard 
+  - Reset your client secret if necessary 
+  - Update the `.env` file and variables
+2. Check the `client_id` and `client_secret` parameters 
+3. Use the latest `code` after connecting with discord 
+
 ### Replit Bot Login 
 
-This message always appears. 
+This message always appears, but it has something to do with `fetch` which is installed by replit. It is better to use `v2` because it integrates with **CJS** modules. 
 
 ```
 (node:281) ExperimentalWarning: stream/web is an experimental feature. This feature could change at any time
@@ -225,6 +332,8 @@ If the bot fails to log on then kill the container in the **shell**.
 ```sh
 kill 1
 ```
+
+The `events/debug.js` file might also help with this issue. 
 
 ### Embed Builder Errors 
 
