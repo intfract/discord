@@ -13,8 +13,10 @@ const redirect = 'https://discord.com/api/oauth2/authorize?' + new URLSearchPara
   client_id: process.env.client,
   redirect_uri: uri,
   response_type: 'code',
-  scope: 'identify guilds guilds.join guilds.members.read',
+  scope: 'identify guilds',
 }).toString()
+
+console.log(redirect)
 
 app.use(express.static('public'))
 
@@ -81,7 +83,7 @@ app.get('/', async (req, res) => {
         code,
         grant_type: 'authorization_code',
         redirect_uri: uri, // needs checking
-        scope: 'identify guilds guilds.join guilds.members.read',
+        scope: 'identify guilds',
       })
       console.log(params)
 			const tokenResponseData = await fetch('https://discord.com/api/oauth2/token', {
@@ -97,7 +99,7 @@ app.get('/', async (req, res) => {
 
       if (oauthData.error === 'invalid_grant') {
         console.log(`OAUTH ERROR: ${oauthData.error}`)
-        route(req, res, { title: 'Discord', message: 'Hello, World!', auth: url })
+        route(req, res, { title: 'Discord', message: 'Hello, World!', auth: redirect })
       } else {
         const access = oauthData.access
         const refresh = oauthData.refresh
@@ -108,16 +110,16 @@ app.get('/', async (req, res) => {
         })
         const user = await userResult.json()
         console.log(user)
-        route(req, res, { title: 'Discord', message: 'Hello, World!', auth: url, user })
+        route(req, res, { title: 'Discord', message: 'Hello, World!', auth: redirect, user })
       }
 		} catch (error) {
 			// NOTE: An unauthorized token will not throw an error
 			// tokenResponseData.statusCode will be 401
 			console.log(error)
-      route(req, res, { title: 'Discord', message: 'Hello, World!', auth: url })
+      route(req, res, { title: 'Discord', message: 'Hello, World!', auth: redirect })
 		}
   } else {
-    route(req, res, { title: 'Discord', message: 'Hello, World!', auth: url })
+    route(req, res, { title: 'Discord', message: 'Hello, World!', auth: redirect })
   }
 })
 

@@ -330,6 +330,12 @@ The `invalid_client` and `invalid_code` are the msot common OAuth2 errors.
 
 Multiple Gitpod redirect URLs may be necessary because Gitpod workspaces can change machines or regions. The subdomain is in the format `${port}-${user}-${repository}-${id}.ws-us${number}` for western US. regions. 
 
+Currently, the bot is encountering the `401` error. 
+
+```js
+{ message: '401 Unauthorized', code: 0 }
+```
+
 ### Replit Bot Login 
 
 This message always appears, but it has something to do with `fetch` which is installed by replit. It is better to use `v2` because it integrates with **CJS** modules. 
